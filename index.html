@@ -275,13 +275,27 @@ function removeCartItem(i){
   renderCart();
 }
 
-function checkout(){
+    function checkout(){
   if(cart.length===0){
     alert('No sweets added!');
-  } else {
-    alert('Checkout complete! Total: $' + cart.reduce((a,b)=>a+b.price,0).toFixed(2));
-    cart = [];
-    renderCart();
+    return;
+  }
+  
+  // Show payment options
+  const cartContent = document.getElementById('cartContent');
+  cartContent.innerHTML = `
+    <span class="closeBtn" onclick="closeCart()">✕</span>
+    <h2>Checkout</h2>
+    <p>Total: $${cart.reduce((a,b)=>a+b.price,0).toFixed(2)}</p>
+    <div class="payment-box">
+      <h3>Select Payment Method:</h3>
+      <a class="pay-btn cashapp" href="https://cash.app/$izzyrenee736" target="_blank">Pay via Cash App</a><br>
+      <a class="pay-btn paypal" href="https://paypal.me/isabellekowalczyk944" target="_blank">Pay via PayPal</a><br>
+      <button class="btn" onclick="cashPayment()">Cash</button>
+    </div>
+  `;
+}
+
   }
 }
 
