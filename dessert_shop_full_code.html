@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dessert Shop</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #fff5fa;
+      color: #4b2e2e;
+    }
+    header {
+      background: #ffb6d9;
+      padding: 20px;
+      text-align: center;
+      font-size: 32px;
+      font-weight: 600;
+    }
+    .logo {
+      font-size: 20px;
+      font-weight: 500;
+      margin-top: 5px;
+    }
+    .container {
+      width: 90%;
+      max-width: 900px;
+      margin: 30px auto;
+    }
+    .product {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #ff7eb8;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    #checkoutPage, #confirmationPage, #adminPage {
+      display: none;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #d3a3b8;
+      font-family: 'Poppins', sans-serif;
+    }
+    .admin-orders {
+      background: #fff;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    Sweet Treats Bakery
+    <div class="logo">Your Dessert Logo Here 🍰</div>
+  </header>
+
+  <div class="container" id="shopPage">
+    <h2>Our Desserts</h2>
+    <p>No recipes added yet — coming soon!</p>
+    <div class="product">
+      <h3>Sample Dessert</h3>
+      <p>Delicious treat! (Example item)</p>
+      <button onclick="goToCheckout('Sample Dessert')">Order</button>
+    </div>
+  </div>
+
+  <!-- Checkout Page -->
+  <div class="container" id="checkoutPage">
+    <h2>Checkout</h2>
+    <label>Your Name</label>
+    <input id="custName" type="text" placeholder="Enter your name" />
+
+    <label>Your Email</label>
+    <input id="custEmail" type="email" placeholder="Enter your email" />
+
+    <label>Payment Method</label>
+    <select id="paymentMethod" onchange="updatePaymentLink()">
+      <option value="none">Select…</option>
+      <option value="cash">Cash</option>
+      <option value="cashapp">Cash App</option>
+      <option value="paypal">PayPal</option>
+    </select>
+
+    <div id="paymentLinkBox" style="margin-top: 15px; font-size: 17px; font-weight: 500;"></div>
+
+    <button onclick="submitOrder()">Place Order</button>
+  </div>
+
+  <!-- Confirmation Page -->
+  <div class="container" id="confirmationPage">
+    <h2>Thank you so much for your purchase!</h2>
+    <p>You will be contacted soon with further info!</p>
+  </div>
+
+  <!-- Admin Page -->
+  <div class="container" id="adminPage">
+    <h2>Admin Panel</h2>
+    <p>All customer orders will appear here.</p>
+    <div id="ordersList" class="admin-orders"></div>
+  </div>
+
+<script>
+  let selectedDessert = "";
+  let orders = [];
+
+  function goToCheckout(dessert) {
+    selectedDessert = dessert;
+    document.getElementById("shopPage").style.display = "none";
+    document.getElementById("checkoutPage").style.display = "block";
+  }
+
+  function updatePaymentLink() {
+    let method = document.getElementById("paymentMethod").value;
+    let box = document.getElementById("paymentLinkBox");
+
+    if (method === "cash") {
+      box.innerHTML = "You chose <b>Cash</b>. Pay when your dessert is delivered.";
+    }
+    else if (method === "cashapp") {
+      box.innerHTML = `<a href="https://cash.app/$izzyrenee736" target="_blank">Pay via Cash App: $izzyrenee736</a>`;
+    }
+    else if (method === "paypal") {
+      box.innerHTML = `<a href="https://paypal.me/isabellekowalczyk944" target="_blank">Pay via PayPal</a>`;
+    }
+    else {
+      box.innerHTML = "";
+    }
+  }
+
+  function submitOrder() {
+    let name = document.getElementById("custName").value;
+    let email = document.getElementById("custEmail").value;
+    let method = document.getElementById("paymentMethod").value;
+
+    if (!name || !email || method === "none") {
+      alert("Please fill out all fields.");
+      return;
+    }
+
+    let order = {
+      dessert: selectedDessert,
+      name: name,
+      email: email,
+      payment: method,
+    };
+
+    orders.push(order);
+    updateAdminPanel();
+
+    document.getElementById("checkoutPage").style.display = "none";
+    document.getElementById("confirmationPage").style.display = "block";
+  }
+
+  function updateAdminPanel() {
+    let box = document.getElementById("ordersList");
+    box.innerHTML = "";
+
+    orders.forEach((o, i) => {
+      box.innerHTML += `
+        <div style='margin-bottom:15px;'>
+          <b>Order #${i+1}</b><br>
+          Dessert: ${o.dessert}<br>
+          Name: ${o.name}<br>
+          Email: ${o.email}<br>
+          Payment Method: ${o.payment}<br>
+        </div>`;
+    });
+  }
+</script>
+
+</body>
+</html>
